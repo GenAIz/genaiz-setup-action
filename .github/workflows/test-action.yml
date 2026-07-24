@@ -1,0 +1,16 @@
+name: test-action.yml
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-setup-action:
+    name: Test this action
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+      - run: node -p "process.version"
