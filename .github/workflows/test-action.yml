@@ -1,17 +1,32 @@
 name: test-action.yml
 
 on:
-  pull_request:
-    branches:
-      - master
+  workflow_dispatch:
+    inputs:
+      genaiz-cli-version:
+        description: semver version of the genaiz binary to use
+        required: false
+      genaiz-url:
+        description: url of the publishing orchestrator
+        required: true
 
 jobs:
   test-setup-action:
     name: Test this action
-    runs-on: ubuntu-latest
+    runs-on: ops
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: actions/setup-node@v7.0.0
         with:
           node-version: "24"
           cache: npm
+      - run: node -p "process.version"
+      - run: npm ci
+      - run: npm run build
+      - name: test
+        uses: ./
+        with:
+          genaiz-cli-token: ${{ secrets.PA_TOKEN }}
+          genaiz-cli-version: ${{ inputs.genaiz-cli-version }}
+          genaiz-url: ${{ inputs.genaiz-url }}
+          genaiz-session: ${{ secrets.GENAIZ_AUTH_SESSION }}
