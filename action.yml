@@ -1,0 +1,37 @@
+name: Setup the GenAIz CLI
+description: Install & configure the GenAIz CLI (genaiz) in your GitHub Actions runner
+
+branding:
+  icon: terminal
+  color: gray-dark
+
+inputs:
+  genaiz-version:
+    description: >
+      Which version of 'genaiz' to install. This should be an exact version without the 'v' prefix or 'latest' to 
+      always use the latest version. The default is 'latest'.
+    default: latest
+  genaiz-cli-token:
+    description: >
+      The GitHub token to use when pulling versions from GenAIz/genaiz-cli. By default this should cover all cases.
+    default: |
+      ${{ github.server_url == 'https://github.com' && github.token || '' }}
+  orchestrator-session:
+    description: >
+      Session token to use when running 'genaiz ac login'. This can be set to an empty string to skip the login step.
+  orchestrator-url:
+    description: >
+      The GenAIz orchestrator URL to use when running 'genaiz ac login'.
+
+outputs:
+  genaiz-version:
+    description: >
+      The version of 'genaiz' that was installed. This will be something like '1.0.0 (...)' or similar.
+  genaiz-auth:
+    description: >
+      A boolean indicating whether or not the user is authenticated to an orchestrator. This will be true if 
+      'genaiz ac login' was run successfully or false otherwise.
+
+runs:
+  using: 'node24'
+  main: 'dist/index.js'

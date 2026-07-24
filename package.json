@@ -1,0 +1,35 @@
+{
+  "name": "genaiz-setup-action",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "all": "npm run build && npm run bundle",
+    "build": "tsc",
+    "bundle": "ncc build src/index.ts -o dist --minify",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gpgenaiz/genaiz-setup-action.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/gpgenaiz/genaiz-setup-action/issues"
+  },
+  "homepage": "https://github.com/gpgenaiz/genaiz-setup-action#readme",
+  "devDependencies": {
+    "@types/semver": "^7.7.1",
+    "@vercel/ncc": "^0.44.1",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^9.1.1",
+    "@octokit/auth-unauthenticated": "^7.0.3",
+    "semver": "^7.8.5"
+  }
+}

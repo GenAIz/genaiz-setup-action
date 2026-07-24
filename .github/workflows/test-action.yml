@@ -8,10 +8,17 @@ on:
 jobs:
   test-setup-action:
     name: Test this action
-    runs-on: ubuntu-latest
+    runs-on: ops
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: actions/setup-node@v7.0.0
         with:
           node-version: "24"
           cache: npm
+      - run: node -p "process.version"
+      - run: npm ci
+      - run: npm run build
+      - name: test
+        uses: ./
+        with:
+          genaiz-cli-token: ${{ secrets.PA_TOKEN }}
