@@ -1,0 +1,28 @@
+name: draft-action.yml
+on:
+  workflow_dispatch:
+    inputs:
+      overwrite:
+        type: boolean
+        description: If enabled, the version tag will be overwritten on the tree
+        default: false
+
+jobs:
+  draft-action:
+    name: Draft this action
+    runs-on: ops
+
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: npm run all
+      - run: rm -rf node_modules
+        
