@@ -25,4 +25,54 @@ jobs:
       - run: npm ci
       - run: npm run all
       - run: rm -rf node_modules
-        
+      - name: Action Version
+        id: action_version
+        run: |
+          VERSION=$(node -p 'require("./package.json").version')
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Exclude duplicated tags
+        if: ${{ !inputs.overwrite }}
+        run: |
+          existing_tag="$(git --no-pager tag -l 'v${{steps.action_version.outputs.VERSION}}' | head -1)" && \
+            [ -z "$existing_tag" ] || \
+              { echo 'Version ${{steps.action_version.outputs.VERSION}} is already tagged' >&2; exit 1; }
+      - name: Remove existing tag
+        if: ${{ inputs.overwrite }}
+        continue-on-error: true
+        run: |
+          git tag -d 'v${{steps.action_version.outputs.VERSION}}'
+      - name: Commit dist release
+        run: |
+          git config user.name genaiz_release_draft[bot]
+          git config user.email genaiz_release_draft[bot]@users.noreply.github.com
+          git add -Af
+          git commit -m 'Dist release v${{steps.action_version.outputs.VERSION}}'
+          git tag -f 'v${{steps.action_version.outputs.VERSION}}'
+          git push -f origin 'v${{steps.action_version.outputs.VERSION}}'
+      - name: Create draft release
+        id: draft_release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create 'v${{steps.action_version.outputs.VERSION}}-Draft' \
+            --title='v${{steps.action_version.outputs.VERSION}}' \
+            --notes='This is a draft' \
+            --draft=true \
+            --fail-on-no-commits
+          DRAFT_URL=$(gh release view 'v${{steps.action_version.outputs.VERSION}}-Draft' \
+            --json url --jq '.url')
+          echo "DRAFT_URL=$DRAFT_URL" >> $GITHUB_OUTPUT
+      - name: Create distribution ticket
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BODY: |
+            As a release manager, I need to validate release [v${{steps.action_version.outputs.VERSION}}](${{steps.draft_release.outputs.DRAFT_URL}}) before sealing it as an immutable release
+            
+            Acceptance:
+            - Select the release tag v${{steps.action_version.outputs.VERSION}}
+            - Publish the draft to seal the tag. (This will burn the tag!!! Careful)
+        run: |
+          gh issue create \
+            --title "Validate release v${{steps.action_version.outputs.VERSION}}" \
+            --type "Task" \
+            --body "$BODY"
