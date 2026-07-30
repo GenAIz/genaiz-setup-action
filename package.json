@@ -1,6 +1,6 @@
 {
   "name": "genaiz-setup-action",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,16 +11,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gpgenaiz/genaiz-setup-action.git"
+    "url": "git+https://github.com/GenAIZ/genaiz-setup-action.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Guillaume Pelletier <guillaume.pelletier@genaiz.com>",
+  "license": "MIT",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/gpgenaiz/genaiz-setup-action/issues"
+    "url": "https://github.com/GenAIZ/genaiz-setup-action/issues"
   },
-  "homepage": "https://github.com/gpgenaiz/genaiz-setup-action#readme",
+  "homepage": "https://github.com/GenAIZ/genaiz-setup-action#readme",
   "devDependencies": {
     "@types/node": "^26.1.1",
     "@types/semver": "^7.7.1",

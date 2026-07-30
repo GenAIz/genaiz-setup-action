@@ -22,6 +22,7 @@ async function main() {
 
     const {stdout} = await execa('genaiz', ['--version'])
     core.info(`installed version: ${stdout}`)
+    core.setOutput('genaiz-version', stdout)
 
     if (sessionArg) {
         core.debug(`inspecting session for ${sessionUrlArg}`)
@@ -30,6 +31,8 @@ async function main() {
         core.debug(`activating session for ${sessionUrlArg}`)
         await activate(sessionUrlArg)
     }
+
+    core.setOutput('genaiz-auth', true)
 }
 
 async function activate(url: string) {
@@ -62,5 +65,6 @@ async function inspect(url: string, token: string) {
 }
 
 main().catch(err => {
+    core.setOutput('genaiz-auth', false)
     core.setFailed(err instanceof Error ? err.message : String(err))
 })
