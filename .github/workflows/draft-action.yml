@@ -59,8 +59,7 @@ jobs:
           gh release create 'v${{steps.action_version.outputs.VERSION}}-Draft' \
             --title='v${{steps.action_version.outputs.VERSION}}' \
             --notes='This is a draft' \
-            --draft=true \
-            --fail-on-no-commits
+            --draft=true
           DRAFT_URL=$(gh release view 'v${{steps.action_version.outputs.VERSION}}-Draft' \
             --json url --jq '.url')
           echo "DRAFT_URL=$DRAFT_URL" >> $GITHUB_OUTPUT
